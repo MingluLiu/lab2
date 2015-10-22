@@ -1,0 +1,51 @@
+package main
+import (
+    "fmt"
+    "net/http"
+     "encoding/json"
+     "github.com/julienschmidt/httprouter"
+     "io/ioutil"
+    )
+
+
+type Input struct{
+    Name string
+}
+type Output struct{
+    Greeting string
+}
+
+func main() {
+
+    mux := httprouter.New()
+    mux.GET("/hello/:name", hello)
+    mux.POST("/hello", greeting)
+    server := http.Server{
+            Addr:        "0.0.0.0:8080",
+            Handler: mux,
+    }
+    server.ListenAndServe()
+}
+
+func greeting(w http.ResponseWriter, r *http.Request, p httprouter.Params){
+    body, err :=ioutil.ReadAll(r.Body)
+    if err != nil {
+        panic("error")
+    }
+    var o Output
+    var i Input
+    err = json.Unmarshal(body, &i)
+    if err != nil {
+        panic("error Unmarshal")
+    }
+    
+    o.Greeting = "hello, " + i.Name +"!"
+    b,_:=json.Marshal(o)
+    fmt.Fprintf(w, string(b)+"\n")
+}
+
+func hello(rw http.ResponseWriter, req *http.Request, p httprouter.Params) {
+    fmt.Fprintf(rw, "Hello, %s!\n", p.ByName("name"))
+}
+
+
