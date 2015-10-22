@@ -1,5 +1,5 @@
 # lab2
-CMPE273Aung
+
 $ go build
 $ ./Lab2
 
