@@ -1,6 +1,7 @@
 # lab2
 
 $ go build
+
 $ ./Lab2
 
 //open another terminal window and type:
